@@ -1,5 +1,5 @@
+import javax.inject._
 import com.google.inject.AbstractModule
-import javax.inject.Singleton
 import net.codingwell.scalaguice.ScalaModule
 import play.api.{ Configuration, Environment }
 import v1.advert.{ CarAdvertRepository, CarAdvertRepositoryImpl }

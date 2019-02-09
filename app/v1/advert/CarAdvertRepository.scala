@@ -32,7 +32,7 @@ class CarAdvertRepositoryImpl @Inject()()(implicit ec: CarAdvertExecutionContext
 
   private val carAdverts = scala.collection.mutable.ListBuffer(
     CarAdvertData(AdvertId(1),
-                  AdvertTitle("Audi A4 Avant"),
+                  AdvertTitle("VW Polo"),
                   Fuel.Diesel,
                   2000,
                   isNew = false,
@@ -41,9 +41,10 @@ class CarAdvertRepositoryImpl @Inject()()(implicit ec: CarAdvertExecutionContext
     CarAdvertData(AdvertId(2), AdvertTitle("Toyota Auris")),
     CarAdvertData(AdvertId(3), AdvertTitle("BMW X3")),
     CarAdvertData(AdvertId(4), AdvertTitle("Mercedes Benz")),
-    CarAdvertData(AdvertId(5), AdvertTitle("VW Polo"))
+    CarAdvertData(AdvertId(5), AdvertTitle("Audi A4 Avant"))
   )
 
+  //TODO implement sorting based on other fields
   override def listAdverts(
       sortBy: Option[String]
   )(implicit mc: MarkerContext): Future[Seq[CarAdvertData]] =
