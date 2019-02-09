@@ -12,7 +12,7 @@ class CarAdvertExecutionContext @Inject()(actorSystem: ActorSystem)
 
 trait CarAdvertRepository {
 
-  def listAdverts()(implicit mc: MarkerContext): Future[Seq[CarAdvertData]]
+  def listAdverts(sortBy: Option[String])(implicit mc: MarkerContext): Future[Seq[CarAdvertData]]
 
   def getAdvert(adId: AdvertId)(implicit mc: MarkerContext): Future[Option[CarAdvertData]]
 
@@ -44,10 +44,20 @@ class CarAdvertRepositoryImpl @Inject()()(implicit ec: CarAdvertExecutionContext
     CarAdvertData(AdvertId(5), AdvertTitle("VW Polo"))
   )
 
-  override def listAdverts()(implicit mc: MarkerContext): Future[Seq[CarAdvertData]] =
+  override def listAdverts(
+      sortBy: Option[String]
+  )(implicit mc: MarkerContext): Future[Seq[CarAdvertData]] =
     Future {
       logger.trace(s"listAdverts: ")
-      carAdverts
+      sortBy match {
+        case Some(sort) => {
+          sort.toLowerCase match {
+            case "title" => carAdverts.sorted(CarAdvertData.orderingByTitle)
+            case _       => carAdverts.sorted
+          }
+        }
+        case _ => carAdverts.sorted
+      }
     }
 
   override def getAdvert(adId: AdvertId)(
