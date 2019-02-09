@@ -63,7 +63,10 @@ class CarAdvertRepositoryImpl @Inject()()(implicit ec: CarAdvertExecutionContext
 
   override def getAdvert(adId: AdvertId)(
       implicit mc: MarkerContext
-  ): Future[Option[CarAdvertData]] = ???
+  ): Future[Option[CarAdvertData]] = Future {
+    logger.trace(s"getAdvert: id = $adId")
+    carAdverts.find(ad => ad.id == adId)
+  }
 
   override def createAdvert(data: CarAdvertData)(implicit mc: MarkerContext): Future[AdvertId] = ???
 
