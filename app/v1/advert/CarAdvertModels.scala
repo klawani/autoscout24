@@ -1,8 +1,7 @@
 package v1.advert
 
 import java.time.LocalDate
-
-import play.api.libs.json.Json
+import play.api.libs.json._
 import v1.advert.Fuel.Gasoline
 
 final case class CarAdvertData(id: AdvertId,
@@ -13,10 +12,14 @@ final case class CarAdvertData(id: AdvertId,
                                mileage: Option[Int] = None,
                                firstRegistration: Option[LocalDate] = None)
 
+object CarAdvertData {
+  implicit val orderingById: Ordering[CarAdvertData] = Ordering.by(_.id)
+  val orderingByTitle: Ordering[CarAdvertData]       = Ordering.by(_.title)
+}
+
 sealed trait Fuel
 
 object Fuel {
-
   case object Gasoline extends Fuel
   case object Diesel   extends Fuel
 
@@ -39,7 +42,10 @@ object AdvertId {
   }
 }
 
-class AdvertTitle(val title: String) {}
+class AdvertTitle(val title: String) extends Ordered[AdvertTitle] {
+  override def compare(that: AdvertTitle): Int =
+    this.title.compareToIgnoreCase(that.title)
+}
 
 object AdvertTitle {
   def apply(raw: String): AdvertTitle = {
@@ -57,7 +63,6 @@ case class CarAdvertDTO(id: Int,
                         firstRegistration: Option[String] = None)
 
 object CarAdvertDTO {
-
   implicit val carAdvertDTOReads = Json.reads[CarAdvertDTO]
   implicit val carAvertDTOWrites = Json.writes[CarAdvertDTO]
 }

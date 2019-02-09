@@ -9,8 +9,8 @@ class CarAdvertService @Inject()(
     carAdvertRepository: CarAdvertRepository
 )(implicit ec: ExecutionContext) {
 
-  def listAdverts()(implicit mc: MarkerContext): Future[Seq[CarAdvertDTO]] =
-    carAdvertRepository.listAdverts().map { ads =>
+  def listAdverts(sortBy: Option[String])(implicit mc: MarkerContext): Future[Seq[CarAdvertDTO]] =
+    carAdvertRepository.listAdverts(sortBy).map { ads =>
       ads.map(createCarAdvertDTO)
     }
 
