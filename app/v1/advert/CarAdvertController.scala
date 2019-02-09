@@ -20,4 +20,12 @@ class CarAdvertController @Inject()(cc: CarAdvertControllerComponents)(
         Ok(Json.toJson(ads))
       }
   }
+
+  def getAdvert(adId: Int): Action[AnyContent] = CarAdvertAction.async { implicit request =>
+    logger.trace("getAdvert: " + request)
+    carAdvertService.getAdvert(AdvertId(adId)).map { ad =>
+      Ok(Json.toJson(ad))
+    }
+  }
+
 }

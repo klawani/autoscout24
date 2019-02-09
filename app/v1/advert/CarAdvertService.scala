@@ -14,6 +14,9 @@ class CarAdvertService @Inject()(
       ads.map(createCarAdvertDTO)
     }
 
+  def getAdvert(adId: AdvertId)(implicit mc: MarkerContext): Future[Option[CarAdvertDTO]] =
+    carAdvertRepository.getAdvert(adId).map(_.map(createCarAdvertDTO))
+
   private def createCarAdvertDTO(carAdvertData: CarAdvertData): CarAdvertDTO =
     CarAdvertDTO(
       carAdvertData.id.id,

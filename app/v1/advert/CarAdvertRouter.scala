@@ -12,5 +12,7 @@ class CarAdvertRouter @Inject()(controller: CarAdvertController) extends SimpleR
     case GET(p"/adverts" ? q_o"sortBy=$field") => {
       controller.list(field)
     }
+    case GET(p"/adverts/${int(id) }") =>
+      controller.getAdvert(id)
   }
 }
