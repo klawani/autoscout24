@@ -45,4 +45,27 @@ class CarAdvertController @Inject()(cc: CarAdvertControllerComponents)(
     )
   }
 
+  def updateAdvert: Action[JsValue] = CarAdvertAction.async(parse.json) { implicit request =>
+    logger.trace("updateAdvert: " + request)
+    val carAdvertResult = request.body.validate[CarAdvertDTO]
+    carAdvertResult.fold(
+      errors => {
+        Future.successful(
+          BadRequest(Json.obj("status" -> "KO", "message" -> JsError.toJson(errors)))
+        )
+      },
+      carAdvert => {
+        carAdvertService
+          .updateAdvert(carAdvert)
+          .map(adId => Ok(Json.toJson(adId)))
+      }
+    )
+  }
+
+  def deleteAdvert(adId: Int): Action[AnyContent] = CarAdvertAction.async { implicit request =>
+    logger.trace("deleteAdvert: " + request)
+    carAdvertService.deleteAdvert(AdvertId(adId)).map { resId =>
+      Ok(Json.toJson(resId))
+    }
+  }
 }

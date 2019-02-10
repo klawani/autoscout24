@@ -18,9 +18,9 @@ trait CarAdvertRepository {
 
   def createAdvert(data: CarAdvertData)(implicit mc: MarkerContext): Future[AdvertId]
 
-  def updateAdvert(data: CarAdvertData)(implicit mc: MarkerContext): Future[AdvertId]
+  def updateAdvert(data: CarAdvertData)(implicit mc: MarkerContext): Future[Option[AdvertId]]
 
-  def deleteAdvert(id: AdvertId)(implicit mc: MarkerContext): Future[AdvertId]
+  def deleteAdvert(id: AdvertId)(implicit mc: MarkerContext): Future[Option[AdvertId]]
 
 }
 
@@ -77,7 +77,32 @@ class CarAdvertRepositoryImpl @Inject()()(implicit ec: CarAdvertExecutionContext
       newCarAdvertData.id
     }
 
-  override def updateAdvert(data: CarAdvertData)(implicit mc: MarkerContext): Future[AdvertId] = ???
+  override def updateAdvert(
+      data: CarAdvertData
+  )(implicit mc: MarkerContext): Future[Option[AdvertId]] =
+    Future {
+      logger.trace(s"updateAdvert: data = $data")
+      findExistingAd(data.id) match {
+        case Some(existingCarAd) => {
+          carAdverts(carAdverts.indexOf(existingCarAd)) = data
+          Option(data.id)
+        }
+        case _ => None
+      }
+    }
 
-  override def deleteAdvert(id: AdvertId)(implicit mc: MarkerContext): Future[AdvertId] = ???
+  override def deleteAdvert(id: AdvertId)(implicit mc: MarkerContext): Future[Option[AdvertId]] =
+    Future {
+      logger.trace(s"deleteAdvert: id = $id")
+      findExistingAd(id) match {
+        case Some(existingCarAd) => {
+          carAdverts -= existingCarAd
+          Option(id)
+        }
+        case _ => None
+      }
+    }
+
+  private def findExistingAd(id: AdvertId): Option[CarAdvertData] =
+    carAdverts.find(ad => ad.id == id)
 }
