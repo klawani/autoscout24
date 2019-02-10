@@ -68,7 +68,14 @@ class CarAdvertRepositoryImpl @Inject()()(implicit ec: CarAdvertExecutionContext
     carAdverts.find(ad => ad.id == adId)
   }
 
-  override def createAdvert(data: CarAdvertData)(implicit mc: MarkerContext): Future[AdvertId] = ???
+  override def createAdvert(data: CarAdvertData)(implicit mc: MarkerContext): Future[AdvertId] =
+    Future {
+      logger.trace(s"createAdvert: data = $data")
+      val nextId           = carAdverts.maxBy(_.id).id.id + 1
+      val newCarAdvertData = CarAdvertData(AdvertId(nextId), data.title)
+      carAdverts += newCarAdvertData
+      newCarAdvertData.id
+    }
 
   override def updateAdvert(data: CarAdvertData)(implicit mc: MarkerContext): Future[AdvertId] = ???
 

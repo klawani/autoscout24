@@ -10,21 +10,19 @@ class CarAdvertService @Inject()(
 )(implicit ec: ExecutionContext) {
 
   def listAdverts(sortBy: Option[String])(implicit mc: MarkerContext): Future[Seq[CarAdvertDTO]] =
-    carAdvertRepository.listAdverts(sortBy).map { ads =>
-      ads.map(createCarAdvertDTO)
-    }
+    carAdvertRepository
+      .listAdverts(sortBy)
+      .map { ads =>
+        ads.map(CarAdvertHelpers.createCarAdvertDTO)
+      }
 
   def getAdvert(adId: AdvertId)(implicit mc: MarkerContext): Future[Option[CarAdvertDTO]] =
-    carAdvertRepository.getAdvert(adId).map(_.map(createCarAdvertDTO))
+    carAdvertRepository
+      .getAdvert(adId)
+      .map(_.map(CarAdvertHelpers.createCarAdvertDTO))
 
-  private def createCarAdvertDTO(carAdvertData: CarAdvertData): CarAdvertDTO =
-    CarAdvertDTO(
-      carAdvertData.id.id,
-      carAdvertData.title.title,
-      carAdvertData.fuel.toString,
-      carAdvertData.price,
-      carAdvertData.isNew,
-      carAdvertData.mileage,
-      carAdvertData.firstRegistration.map(_.toString)
-    )
+  def createAdvert(carAdvertDTO: CarAdvertDTO)(implicit mc: MarkerContext): Future[Int] =
+    carAdvertRepository
+      .createAdvert(CarAdvertHelpers.createCarAdvertFromDTO(carAdvertDTO))
+      .map(adId => adId.id)
 }
