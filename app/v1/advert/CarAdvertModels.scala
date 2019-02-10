@@ -14,6 +14,7 @@ final case class CarAdvertData(id: AdvertId,
 
 object CarAdvertData {
   implicit val orderingById: Ordering[CarAdvertData]  = Ordering.by(_.id)
+  implicit val localDateOrdering: Ordering[LocalDate] = Ordering.by(_.toEpochDay)
   val orderingByTitle: Ordering[CarAdvertData]        = Ordering.by(_.title)
   val orderingByPrice: Ordering[CarAdvertData]        = Ordering.by(_.price)
   val orderingByMileage: Ordering[CarAdvertData]      = Ordering.by(_.mileage)
