@@ -44,4 +44,30 @@ class CarAdvertControllerSpec extends PlaySpec with GuiceOneAppPerSuite {
       resultAd.id mustEqual adId
     }
   }
+
+  "CarAdvertController" should {
+    "create an advert from Json file" in {
+      val newCarAdvertAsJson = s"""{
+        "id": 8,
+        "title": "Range Rover",
+        "fuel": "diesel",
+        "price": 0,
+        "isNew": true
+        }"""
+
+      val expectedId  = 6
+      val pathNoParam = s"/api/v1/advert"
+      val request = FakeRequest(POST, s"$pathNoParam")
+        .withHeaders(HOST -> "localhost:9000")
+        .withHeaders(CONTENT_TYPE -> "application/json")
+        .withBody(newCarAdvertAsJson)
+
+      val result = route(app, request).get
+
+      status(result) mustEqual OK
+      val resultAd = contentAsJson(result).as[Int]
+
+      resultAd mustEqual expectedId
+    }
+  }
 }

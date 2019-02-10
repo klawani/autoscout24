@@ -14,5 +14,8 @@ class CarAdvertRouter @Inject()(controller: CarAdvertController) extends SimpleR
     }
     case GET(p"/adverts/${int(id) }") =>
       controller.getAdvert(id)
+
+    case POST(p"/advert") =>
+      controller.createAdvert
   }
 }
