@@ -25,4 +25,15 @@ class CarAdvertService @Inject()(
     carAdvertRepository
       .createAdvert(CarAdvertHelpers.createCarAdvertFromDTO(carAdvertDTO))
       .map(adId => adId.id)
+
+  def updateAdvert(carAdvertDTO: CarAdvertDTO)(implicit mc: MarkerContext): Future[Option[Int]] =
+    carAdvertRepository
+      .updateAdvert(CarAdvertHelpers.createCarAdvertFromDTO(carAdvertDTO))
+      .map(_.map(_.id))
+
+  def deleteAdvert(adId: AdvertId)(implicit mc: MarkerContext): Future[Option[Int]] =
+    carAdvertRepository
+      .deleteAdvert(adId)
+      .map(_.map(_.id))
+
 }
