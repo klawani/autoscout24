@@ -44,7 +44,6 @@ class CarAdvertRepositoryImpl @Inject()()(implicit ec: CarAdvertExecutionContext
     CarAdvertData(AdvertId(5), AdvertTitle("Audi A4 Avant"))
   )
 
-  //TODO implement sorting based on other fields
   override def listAdverts(
       sortBy: Option[String]
   )(implicit mc: MarkerContext): Future[Seq[CarAdvertData]] =
@@ -53,8 +52,11 @@ class CarAdvertRepositoryImpl @Inject()()(implicit ec: CarAdvertExecutionContext
       sortBy match {
         case Some(sort) => {
           sort.toLowerCase match {
-            case "title" => carAdverts.sorted(CarAdvertData.orderingByTitle)
-            case _       => carAdverts.sorted
+            case "title"             => carAdverts.sorted(CarAdvertData.orderingByTitle)
+            case "price"             => carAdverts.sorted(CarAdvertData.orderingByPrice)
+            case "mileage"           => carAdverts.sorted(CarAdvertData.orderingByMileage)
+            case "firstRegistration" => carAdverts.sorted(CarAdvertData.orderingByRegistration)
+            case _                   => carAdverts.sorted
           }
         }
         case _ => carAdverts.sorted
