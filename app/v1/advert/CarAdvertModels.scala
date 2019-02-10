@@ -13,8 +13,12 @@ final case class CarAdvertData(id: AdvertId,
                                firstRegistration: Option[LocalDate] = None)
 
 object CarAdvertData {
-  implicit val orderingById: Ordering[CarAdvertData] = Ordering.by(_.id)
-  val orderingByTitle: Ordering[CarAdvertData]       = Ordering.by(_.title)
+  implicit val orderingById: Ordering[CarAdvertData]  = Ordering.by(_.id)
+  implicit val localDateOrdering: Ordering[LocalDate] = Ordering.by(_.toEpochDay)
+  val orderingByTitle: Ordering[CarAdvertData]        = Ordering.by(_.title)
+  val orderingByPrice: Ordering[CarAdvertData]        = Ordering.by(_.price)
+  val orderingByMileage: Ordering[CarAdvertData]      = Ordering.by(_.mileage)
+  val orderingByRegistration: Ordering[CarAdvertData] = Ordering.by(_.firstRegistration)
 }
 
 sealed trait Fuel
